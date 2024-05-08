@@ -32,7 +32,7 @@ To install Raven, you have three options:
 ```go get github.com/Symbolexe/raven```
 ## Usage
 
-```raven [options] <startURL>```
+``` ./raven [options] <startURL>```
 
 ⚠️ _<startURL>: The starting URL from which the crawling process begins._ ⚠️
 
@@ -43,7 +43,7 @@ To install Raven, you have three options:
 
 ## Example
 
-```raven -maxURLs 500 -maxDepth 5 -concurrency 20 https://example.com```
+```./raven -maxURLs 500 -maxDepth 5 -concurrency 20 https://example.com```
 
 This command will crawl the website https://example.com with a maximum of 500 URLs, a maximum depth of 5, and 20 concurrent requests.
 
