@@ -34,7 +34,7 @@ To install Raven, you have three options:
 
 ``` ./raven [options] <startURL>```
 
-⚠️ <startURL>: The starting URL from which the crawling process begins. ⚠️
+⚠️ startURL: The starting URL from which the crawling process begins. ⚠️
 
 ## Options
 1. -maxURLs <value>: Maximum number of URLs to crawl (default: 100)
