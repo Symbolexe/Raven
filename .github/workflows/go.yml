@@ -1,0 +1,85 @@
+name: Go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.22.2
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v -race ./...
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install golangci-lint
+      run: |
+        curl -sSfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.41.1
+
+    - name: Lint
+      run: golangci-lint run
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install goveralls
+      run: go get -u github.com/mattn/goveralls
+
+    - name: Run tests with coverage
+      run: |
+        go test -v -race -coverprofile=coverage.out ./...
+        goveralls -coverprofile=coverage.out -service=github
+
+  release:
+    name: Release Binary
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.22.2
+
+    - name: Build Release Binary
+      run: go build -o raven
+
+    - name: Compress Binary
+      run: tar -czvf raven.tar.gz raven
+
+    - name: Upload Release Binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: raven
+        path: raven.tar.gz
